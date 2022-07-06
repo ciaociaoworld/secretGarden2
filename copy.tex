@@ -1,0 +1,67 @@
+import './App.css';
+import { Routes, Route, Link } from 'react-router-dom';
+
+
+
+function App() {
+  if (logged === true) {
+    return (
+      <>
+        <div className='container'>
+            <header className="header">
+              {/* img?orLogo */}
+              <div className='homeBtn'>
+                Home
+              </div>
+              <div>
+                <Link to='/'>Home</Link>
+                <Link className='User Details'>User Details</Link>
+              </div>
+            </header>
+
+            <main>
+              <Routes>
+                <Route path='/' element={<Home />}></Route>
+                <Route path='/essays/:id/*' element={ <EassayContent />}></Route>
+                {/* emptyArr for log out */}
+                {/* <Route element={<LogOutFNC /> }></Route> */}
+              </Routes>
+            </main>
+            {/* footer to add */}
+        </div>
+      </>
+    )
+    }
+  else {
+    return (
+      <div className='container'>
+            <header className="header">
+              {/* img?orLogo */}
+              <div className='homeBtn'>
+                Home
+              </div>
+              <div>
+                <Link className='about'>About</Link>
+                <Link className='loginBtn'>Log In</Link>
+                <Link className='signUpBtn'>Sign Up</Link>
+              </div>
+            </header>
+
+            <main>
+              <Routes>
+                <Route path='/' element={<Home />}></Route>
+                <Route path='/essays/:id/*' element={ <EassayContent />}></Route>
+                {/* emptyArr for log out */}
+                {/* <Route element={<LogOutFNC /> }></Route> */}
+                <Route path='/about' element={ <AboutContent />}></Route>
+                <Route path='/login' element={ <Login />}></Route>
+                <Route path='/signUp' element={ <SignUp />}></Route>
+              </Routes>
+            </main>
+            {/* footer to add */}
+        </div>
+    )
+  }
+}
+
+export default App;

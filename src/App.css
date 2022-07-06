@@ -1,3 +1,16 @@
+body {
+  background-image: url('https://philosophyessay.org/wp-content/uploads/2020/01/Essay-Writing-Practice.jpg');
+  text-align: center;
+  background-size: 100%;
+}
+
+.essayContainer {
+  width: 300px;
+  display: table-cell;
+  vertical-align: middle;
+  
+}
+
 .App {
   text-align: center;
 }
