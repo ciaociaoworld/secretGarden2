@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import React from 'react'
 import Axios from 'axios'
 
@@ -7,7 +7,7 @@ import AddYourEssay from './AddYourEssay'
 function EssayContent() {
     const [essays, setEssays] = useState([])
     const [newEssay, setNewEssay] = useState('')
-   
+
 
     const addEssay = () => {
         if (newEssay) {
@@ -15,65 +15,61 @@ function EssayContent() {
             let newEssayObj = { id: num, content: newEssay }
             setEssays([...essays, newEssayObj])
             setNewEssay('')
-            Axios.post('http://localhost:3001', newEssayObj).then((res) => {
-                res.data
-            })
+            Axios.post('/essays', [...essays, newEssayObj])
         }
     }
+
+    const getEssays = () => {
+        Axios.get('/essays')
+            .then((res) => {
+                setEssays(res.data.essays)
+            })
+    }
+
+    useEffect(() => {
+        setEssays([])
+        getEssays()
+    }, [])
 
     const deleteEssay = (id) => {
         let idTouch = essays.filter(essay => essay.id !== id)
         setEssays(idTouch)
-        Axios.delete('http://localhost:3001', { id })
+        Axios.delete('/essays', { id })
     }
 
 
 
     const editEssay = (index) => {
-        essays[index].isEdit = false
-        Axios.put('http://localhost:3001', essays[index]) 
+        const list = [...essays]
+        list[index].isEdit = false
+        setEssays(list)
+        Axios.put('/essays', essays[index])
     }
-
-
-
-    // const newEditEssay = ()
-
-
-    // function getEssay() {
-    //     fetch('/essays')
-    //     .then(res => res.json())
-    //     .then(res => setEssays(res.essays))
-    // }
-
-    // function updateEssay() {
-    //     if (essays !== null) {
-    //         fetch('/essays', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json'},
-    //             body: JSON.stringify({ essays })
-    //         })
-    //     }
-    // }
-    //   const handleSubmit = (event) => {
-    //     event.preventDefault()
-    // }
 
     return (
         <div className='container'>
             <div className='showAll'>
                 <h3>Your Secret Diary</h3>
 
-                {essays.map((essay, index) => {
-                    return <div className='essayContainer'>
+                {essays && essays.map((essay, index) => {
+                    return <div className='essayContainer' key={index}>
                         {
                             essay.isEdit
-                                ? <input value={essay.content} onInput={({ target }) => { essay.content=target.value }} />
+                                ? <textarea cols="30" rows="5" value={essay.content} onInput={({ target }) => {
+                                    const list = [...essays]
+                                    list[index].content = target.value
+                                    setEssays(list)
+                                }} />
                                 : <p className='essayContent' id={essay.id}>{essay.content} </p>
                         }
                         <button onClick={() => deleteEssay(essay.id)}>Delete</button>
 
                         {!essay.isEdit
-                            ? <button onClick={essay.isEdit=true}>Edit</button>
+                            ? <button onClick={() => {
+                                const list = [...essays]
+                                list[index].isEdit = true
+                                setEssays(list)
+                            }}>Edit</button>
                             : <button onClick={() => editEssay(index)}>Save</button>
                         }
                     </div>
